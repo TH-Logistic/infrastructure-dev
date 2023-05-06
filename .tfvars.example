@@ -1,0 +1,16 @@
+aws_access_key = ""
+aws_secret_key = ""
+aws_session_token = ""
+aws_region = ""
+
+key_pair_name = ""
+
+mongo_db_name = ""
+mongo_username = ""
+mongo_password = ""
+
+app_secret = ""
+
+rds_db_name = ""
+rds_username= ""
+rds_password = ""

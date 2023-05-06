@@ -1,0 +1,10 @@
+#!/bin/bash
+
+docker run \
+    --env   MONGO_INITDB_DATABASE=${mongo_db_name} \
+    --env   MONGO_INITDB_ROOT_USERNAME=${mongo_username} \
+    --env   MONGO_INITDB_ROOT_PASSWORD=${mongo_password} \
+    --name mongo_container \
+    -p27017:27017 \
+    -d \
+    mongo
