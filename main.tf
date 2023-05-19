@@ -147,6 +147,7 @@ module "instance_server" {
   instance_name       = "th-server"
   internet_gateway_id = module.internet_gateway.internet_gateway_id
   vpc_id              = module.vpc.vpc_id
+  instance_type       = "t3.xlarge"
   subnet_cidr         = "10.0.0.0/24"
   user_data = templatefile("./scripts/instance-user-data/mongo-db.tftpl", {
     mongo_db_name  = var.mongo_db_name
