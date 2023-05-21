@@ -1,0 +1,73 @@
+_format_version: "3.0"
+_transform: true
+
+services:
+- name: product_service
+  url: http://www.thinhlh.com:8080/api/v1/product
+  routes:
+  - name: product_service_route
+    paths:
+    - /product
+
+- name: transportation_service
+  url: http://www.thinhlh.com:8081/api/v1/transportation
+  routes:
+  - name: transportation_service_route
+    paths:
+    - /transportation
+
+- name: garage_service
+  url: http://www.thinhlh.com:8081/api/v1/garage
+  routes:
+  - name: garage_service_route
+    paths:
+    - /garage
+
+- name: route_service
+  url: http://www.thinhlh.com:8083/api/v1/route
+  routes:
+  - name: route_service_route
+    paths:
+    - /route
+
+- name: location_service
+  url: http://www.thinhlh.com:8083/api/v1/location
+  routes:
+  - name: location_service_route
+    paths:
+    - /location
+
+- name: organization_service
+  url: http://www.thinhlh.com:8082/api/v1/organization
+  routes:
+  - name: organization_service_route
+    paths:
+    - /organization
+
+- name: healthcheck_service
+  url: http://www.thinhlh.com:8084/api/v1/healthcheck
+  routes:
+  - name: healthcheck_service_route
+    paths:
+    - /healthcheck
+
+- name: job_service
+  url: http://www.thinhlh.com:8085/api/v1/job
+  routes:
+  - name: job_service_route
+    paths:
+    - /job
+
+- name: auth_service
+  url: http://www.thinhlh.com:8000
+  routes:
+  - name: auth_service_route
+    paths:
+    - /auth
+
+- name: user_service
+  url: http://www.thinhlh.com:8001/api/users
+  routes:
+  - name: user_service_route
+    paths:
+    - /users
