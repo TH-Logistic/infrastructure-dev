@@ -8,7 +8,7 @@ docker run \
     --env MONGO_INITDB_DATABASE=${mongo_db_name} \
     --env MONGO_INITDB_ROOT_USERNAME=${mongo_username} \
     --env MONGO_INITDB_ROOT_PASSWORD=${mongo_password} \
-    -p 8081:8081 \
-    --name transportation_container \
+    -p 8084:8084 \
+    --name job_container \
     -d \
-    $REGISTRY/transportation_service:latest
+    $REGISTRY/job_service:latest
