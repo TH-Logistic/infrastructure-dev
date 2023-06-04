@@ -1,0 +1,110 @@
+#!/bin/bash
+
+mkdir -p ~/app/gateway
+cd ~/app/gateway
+
+# git archive --remote=ssh://github.com/TH-Logistic/infrastructure.git HEAD kong.yaml | tar -x > kong.yaml
+
+cat >kong.yaml <<EOL
+_format_version: "3.0"
+_transform: true
+
+services:
+- name: product_service
+url: http://${product_host}:8080/api/v1/product
+  routes:
+  - name: product_service_route
+    paths:
+    - /product
+
+- name: transportation_service
+  url: http://${transportation_host}:8081/api/v1/transportation
+  routes:
+  - name: transportation_service_route
+    paths:
+    - /transportation
+
+- name: garage_service
+  url: http://${garage_host}:8081/api/v1/garage
+  routes:
+  - name: garage_service_route
+    paths:
+    - /garage
+
+- name: route_service
+  url: http://${route_host}:8083/api/v1/route
+  routes:
+  - name: route_service_route
+    paths:
+    - /route
+
+- name: location_service
+  url: http://${location_host}:8083/api/v1/location
+  routes:
+  - name: location_service_route
+    paths:
+    - /location
+
+- name: organization_service
+  url: http://${organization_host}:8082/api/v1/organization
+  routes:
+  - name: organization_service_route
+    paths:
+    - /organization
+
+- name: healthcheck_service
+  url: http://${healthcheck_host}:8084/api/v1/healthcheck
+  routes:
+  - name: healthcheck_service_route
+    paths:
+    - /healthcheck
+
+- name: job_service
+  url: http://${job_host}:8085/api/v1/job
+  routes:
+  - name: job_service_route
+    paths:
+    - /job
+
+- name: billing_service
+  url: http://${billing_host}:8086/api/v1/billing
+  routes:
+  - name: billing_service_route
+    paths:
+    - /billing
+
+- name: auth_service
+  url: http://${auth_host}:8000
+  routes:
+  - name: auth_service_route
+    paths:
+    - /auth
+
+- name: user_service
+  url: http://${user_host}:8001/api/users
+  routes:
+  - name: user_service_route
+    paths:
+    - /users
+EOL
+
+docker run \
+    --name kong_gateway_container \
+    --mount type=bind,source="$(pwd)/"kong.yaml,target=/kong/config/kong.yaml,readonly \
+    --env KONG_DATABASE=off \
+    --env KONG_DECLARATIVE_CONFIG=/kong/config/kong.yaml \
+    --env KONG_PROXY_ACCESS_LOG=/dev/stdout \
+    --env KONG_ADMIN_ACCESS_LOG=/dev/stdout \
+    --env KONG_PROXY_ERROR_LOG=/dev/stderr \
+    --env KONG_ADMIN_ERROR_LOG=/dev/stderr \
+    --env KONG_ADMIN_LISTEN=0.0.0.0:8001 \
+    --env KONG_ADMIN_GUI_URL=http://localhost:9002 \
+    -p 9000:8000 \
+    -p 9443:8443 \
+    -p 9001:8001 \
+    -p 9444:8444 \
+    -p 9002:8002 \
+    -p 9445:8445 \
+    -p 9003:8003 \
+    -p 9004:8004 \
+    -d kong/kong-gateway:3.2.2.1

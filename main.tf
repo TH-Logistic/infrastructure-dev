@@ -128,6 +128,17 @@ data "template_cloudinit_config" "service_template_file" {
 
   part {
     content_type = "text/x-shellscript"
+    content = templatefile("./scripts/instance-user-data/billing-service.tftpl", {
+      mongo_host     = "localhost"
+      mongo_port     = 27017
+      mongo_db_name  = var.mongo_db_name
+      mongo_username = var.mongo_username
+      mongo_password = var.mongo_password
+    })
+  }
+
+  part {
+    content_type = "text/x-shellscript"
     content = templatefile("./scripts/instance-user-data/user-service.tftpl", {
       mongo_host     = "localhost"
       mongo_port     = 27017
@@ -136,6 +147,23 @@ data "template_cloudinit_config" "service_template_file" {
       mongo_password = var.mongo_password
       auth_host      = "localhost"
       auth_port      = 8001
+    })
+  }
+
+  part {
+    content_type = "text/x-shellscript"
+    content = templatefile("./scripts/instance-user-data/gateway.tftpl", {
+      product_host        = "localhost"
+      transportation_host = "localhost"
+      garage_host         = "localhost"
+      organization_host   = "localhost"
+      route_host          = "localhost"
+      location_host       = "localhost"
+      healthcheck_host    = "localhost"
+      job_host            = "localhost"
+      billing_host        = "localhost"
+      auth_host           = "localhost"
+      user_host           = "localhost"
     })
   }
 }
