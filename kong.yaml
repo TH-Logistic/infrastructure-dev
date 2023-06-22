@@ -58,6 +58,20 @@ services:
     paths:
     - /job
 
+- name: billing_service
+  url: http://www.thinhlh.com:8086/api/v1/billing
+  routes:
+  - name: billing_service_route
+    paths:
+    - /billing
+
+- name: mail_service
+  url: http://www.thinhlh.com:8088/api/v1/mail
+  routes:
+  - name: mail_service_route
+    paths:
+    - /mail
+
 - name: auth_service
   url: http://www.thinhlh.com:8000
   routes:
