@@ -9,8 +9,8 @@ docker run \
     --env MONGO_INITDB_ROOT_USERNAME=${mongo_username} \
     --env MONGO_INITDB_ROOT_PASSWORD=${mongo_password} \
     --env AUTH_HOST=${auth_host} \
-    --env AUTH_PORT=${auth_port}
-    -p 8081:8081 \
+    --env AUTH_PORT=${auth_port} \
+    -p 8001:3000 \
     --name user_container \
     -d \
     $REGISTRY/user_service:latest

@@ -8,6 +8,9 @@ docker run \
     --env MONGO_INITDB_DATABASE=${mongo_db_name} \
     --env MONGO_INITDB_ROOT_USERNAME=${mongo_username} \
     --env MONGO_INITDB_ROOT_PASSWORD=${mongo_password} \
+    --env GOOGLE_MAP_API_KEY=${google_map_api_key} \
+    --env DOMAIN_URL=${domain_url} \
+
     -p 8083:8083 \
     --name route_container \
     -d \

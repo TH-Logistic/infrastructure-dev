@@ -47,26 +47,18 @@ data "template_cloudinit_config" "service_template_file" {
     })
   }
 
-  part {
-    content_type = "text/x-shellscript"
-    content = templatefile("./scripts/instance-user-data/product-service.tftpl", {
-      mongo_host     = "localhost"
-      mongo_port     = 27017
-      mongo_db_name  = var.mongo_db_name
-      mongo_username = var.mongo_username
-      mongo_password = var.mongo_password
-    })
-  }
+  module "instance_rds" {
+    source = "github.com/thinhlh/terraform-rds"
 
-  part {
-    content_type = "text/x-shellscript"
-    content = templatefile("./scripts/instance-user-data/route-service.tftpl", {
-      mongo_host     = "localhost"
-      mongo_port     = 27017
-      mongo_db_name  = var.mongo_db_name
-      mongo_username = var.mongo_username
-      mongo_password = var.mongo_password
-    })
+    vpc_id              = module.vpc.vpc_id
+    subnet_cidr_1       = "10.0.10.0/24"
+    subnet_cidr_2       = "10.0.20.0/24"
+    internet_gateway_id = module.internet_gateway.internet_gateway_id
+    engine              = "postgres"
+    rds_db_name         = var.rds_db_name
+    rds_username        = var.rds_username
+    rds_password        = var.rds_password
+    allocated_storage   = 10
   }
 
   part {
@@ -84,12 +76,28 @@ data "template_cloudinit_config" "service_template_file" {
 
   part {
     content_type = "text/x-shellscript"
+    content = templatefile("./scripts/instance-user-data/product-service.tftpl", {
+      mongo_host     = "localhost"
+      mongo_port     = 27017
+      mongo_db_name  = var.mongo_db_name
+      mongo_username = var.mongo_username
+      mongo_password = var.mongo_password
+
+      domain_url = "localhost"
+    })
+  }
+
+  part {
+    content_type = "text/x-shellscript"
     content = templatefile("./scripts/instance-user-data/transportation-service.tftpl", {
       mongo_host     = "localhost"
       mongo_port     = 27017
       mongo_db_name  = var.mongo_db_name
       mongo_username = var.mongo_username
       mongo_password = var.mongo_password
+
+      domain_url         = "localhost"
+      google_map_api_key = "AIzaSyDEokOCthVrnmMPiI_fLEZKQtV1SjFvjxQ"
     })
   }
 
@@ -101,6 +109,8 @@ data "template_cloudinit_config" "service_template_file" {
       mongo_db_name  = var.mongo_db_name
       mongo_username = var.mongo_username
       mongo_password = var.mongo_password
+
+      domain_url = "localhost"
     })
   }
 
@@ -112,6 +122,9 @@ data "template_cloudinit_config" "service_template_file" {
       mongo_db_name  = var.mongo_db_name
       mongo_username = var.mongo_username
       mongo_password = var.mongo_password
+
+      domain_url         = "localhost"
+      google_map_api_key = "AIzaSyDEokOCthVrnmMPiI_fLEZKQtV1SjFvjxQ"
     })
   }
 
@@ -123,17 +136,34 @@ data "template_cloudinit_config" "service_template_file" {
       mongo_db_name  = var.mongo_db_name
       mongo_username = var.mongo_username
       mongo_password = var.mongo_password
+
+      domain_url = "localhost"
+    })
+  }
+
+  part {
+    content_type = "text/x-shellscript"
+    content = templatefile("./scripts/instance-user-data/job-service.tftpl", {
+      postgres_host     = "localhost"
+      postgres_port     = module.instance_rds.rds_port
+      postgres_db       = var.rds_db_name
+      postgres_user     = var.rds_username
+      postgres_password = var.rds_password
+
+      domain_url = "localhost"
     })
   }
 
   part {
     content_type = "text/x-shellscript"
     content = templatefile("./scripts/instance-user-data/billing-service.tftpl", {
-      mongo_host     = "localhost"
-      mongo_port     = 27017
-      mongo_db_name  = var.mongo_db_name
-      mongo_username = var.mongo_username
-      mongo_password = var.mongo_password
+      postgres_host     = "localhost"
+      postgres_port     = module.instance_rds.rds_port
+      postgres_db       = var.rds_db_name
+      postgres_user     = var.rds_username
+      postgres_password = var.rds_password
+
+      domain_url = "localhost"
     })
   }
 
@@ -158,14 +188,15 @@ data "template_cloudinit_config" "service_template_file" {
       mongo_db_name  = var.mongo_db_name
       mongo_username = var.mongo_username
       mongo_password = var.mongo_password
-      auth_host      = "localhost"
-      auth_port      = 8001
+
+      domain_url = "localhost"
     })
   }
 
   part {
     content_type = "text/x-shellscript"
     content = templatefile("./scripts/instance-user-data/gateway.tftpl", {
+      auth_host           = "localhost"
       product_host        = "localhost"
       transportation_host = "localhost"
       garage_host         = "localhost"
@@ -175,7 +206,6 @@ data "template_cloudinit_config" "service_template_file" {
       healthcheck_host    = "localhost"
       job_host            = "localhost"
       billing_host        = "localhost"
-      auth_host           = "localhost"
       user_host           = "localhost"
       mail_host           = "localhost"
     })
@@ -186,16 +216,12 @@ module "instance_server" {
   source = "github.com/TH-Logistic/ec2"
 
   key_pair_name       = module.instance_key_pair.key_pair_name
-  instance_name       = "th-server"
+  instance_name       = var.tenant_unique_id
   internet_gateway_id = module.internet_gateway.internet_gateway_id
   vpc_id              = module.vpc.vpc_id
   instance_type       = "t3.xlarge"
   subnet_cidr         = "10.0.0.0/24"
-  user_data = templatefile("./scripts/instance-user-data/mongo-db.tftpl", {
-    mongo_db_name  = var.mongo_db_name
-    mongo_username = var.mongo_username
-    mongo_password = var.mongo_password
-  })
+  user_data_base64    = data.template_cloudinit_config.service_template_file.rendered
 }
 
 resource "aws_ses_email_identity" "root_email" {

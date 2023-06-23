@@ -3,12 +3,13 @@
 REGISTRY=registry.thinhlh.com
 
 docker run \
-    --env MONGO_INITDB_HOST=${mongo_host} \
-    --env MONGO_INITDB_PORT=${mongo_port} \
-    --env MONGO_INITDB_DATABASE=${mongo_db_name} \
-    --env MONGO_INITDB_ROOT_USERNAME=${mongo_username} \
-    --env MONGO_INITDB_ROOT_PASSWORD=${mongo_password} \
-    -p 8084:8084 \
+    --env POSTGRES_HOST=${postgres_host} \
+    --env POSTGRES_PORT=${postgres_port} \
+    --env POSTGRES_DB=${postgres_db} \
+    --env POSTGRES_USER=${postgres_user} \
+    --env POSTGRES_PASSWORD=${postgres_password} \
+    --env DOMAIN_URL=${domain_url} \
+    -p 8085:8085 \
     --name job_container \
     -d \
     $REGISTRY/job_service:latest

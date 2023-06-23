@@ -1,3 +1,8 @@
+variable "tenant_unique_id" {
+  description = "Tenant Unique Identifier"
+  type        = string
+  default     = "thlogistic"
+}
 variable "aws_region" {
   description = "AWS default region"
   type        = string
