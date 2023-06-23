@@ -24,11 +24,6 @@ variable "aws_session_token" {
   type        = string
 }
 
-variable "key_pair_name" {
-  description = "Key pair name for instances"
-  type        = string
-}
-
 variable "mongo_db_name" {
   description = "mongo database name"
   type        = string

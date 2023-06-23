@@ -26,3 +26,5 @@ sudo systemctl enable docker.service
 sudo systemctl enable containerd.service
 
 newgrp docker
+
+echo ec2-user-data-ubuntu > ~/ran-scripts.txt
