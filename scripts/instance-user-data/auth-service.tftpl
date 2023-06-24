@@ -8,11 +8,11 @@ docker run \
     --env MONGO_INITDB_DATABASE=${mongo_db_name} \
     --env MONGO_INITDB_ROOT_USERNAME=${mongo_username} \
     --env MONGO_INITDB_ROOT_PASSWORD=${mongo_password} \
-    --env ALGORITHM=${algorithm}
-    --env SECRET_KEY=${secret_key}
+    --env ALGORITHM=${algorithm} \
+    --env SECRET_KEY=${secret_key} \
     -p 8000:80 \
     --name auth_container \
     -d \
-    $REGISTRY/healthcheck_service:latest
+    $REGISTRY/auth_service:latest
 
-echo auth-service > ~/ran-scripts.txt
+echo auth-service >> ~/ran-scripts.txt
