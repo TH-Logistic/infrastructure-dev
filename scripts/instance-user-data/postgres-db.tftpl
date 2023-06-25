@@ -1,0 +1,13 @@
+#!/bin/bash
+
+docker run \
+    --env POSTGRES_DB=${postgres_db} \
+    --env POSTGRES_USER=${postgres_user} \
+    --env POSTGRES_PASSWORD=${postgres_password} \
+    --name postgres_container \
+    --network app_network \
+    -p5432:5432 \
+    -d \
+    postgres
+
+echo postgres-db >> ~/ran-scripts.txt

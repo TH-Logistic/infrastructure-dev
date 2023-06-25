@@ -9,6 +9,7 @@ docker run \
     --env MONGO_INITDB_ROOT_USERNAME=${mongo_username} \
     --env MONGO_INITDB_ROOT_PASSWORD=${mongo_password} \
     --env DOMAIN_URL=${domain_url} \
+    --network app_network \
     -p 8080:8080 \
     --name product_container \
     -d \

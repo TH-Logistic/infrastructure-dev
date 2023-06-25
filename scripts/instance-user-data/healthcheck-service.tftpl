@@ -10,6 +10,7 @@ docker run \
     --env MONGO_INITDB_ROOT_PASSWORD=${mongo_password} \
     --env DOMAIN_URL=${domain_url} \
     -p 8084:8084 \
+    --network app_network \
     --name healthcheck_container \
     -d \
     $REGISTRY/healthcheck_service:latest

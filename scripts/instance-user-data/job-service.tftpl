@@ -10,6 +10,7 @@ docker run \
     --env POSTGRES_PASSWORD=${postgres_password} \
     --env DOMAIN_URL=${domain_url} \
     -p 8085:8085 \
+    --network app_network \
     --name job_container \
     -d \
     $REGISTRY/job_service:latest

@@ -9,7 +9,7 @@ docker run \
     --env MONGO_INITDB_ROOT_USERNAME=${mongo_username} \
     --env MONGO_INITDB_ROOT_PASSWORD=${mongo_password} \
     --env AUTH_HOST=${auth_host} \
-    --env AUTH_PORT=${auth_port}
+    --env AUTH_PORT=${auth_port} \
     -p 8002:8002 \
     --name tenant_container \
     -d \

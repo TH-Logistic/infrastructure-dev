@@ -10,6 +10,7 @@ docker run \
     --env MONGO_INITDB_ROOT_PASSWORD=${mongo_password} \
     --env ALGORITHM=${algorithm} \
     --env SECRET_KEY=${secret_key} \
+    --network app_network \
     -p 8000:80 \
     --name auth_container \
     -d \

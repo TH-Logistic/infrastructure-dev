@@ -43,35 +43,35 @@ module "instance_rds" {
   allocated_storage   = 10
 }
 
-data "template_file" "job_script" {
-  template = file("./scripts/instance-user-data/job-service.tftpl")
-  vars = {
-    postgres_host     = "module.instance_rds.rds_ip"
-    postgres_port     = module.instance_rds.rds_port
-    postgres_db       = var.rds_db_name
-    postgres_user     = var.rds_username
-    postgres_password = var.rds_password
+# data "template_file" "job_script" {
+#   template = file("./scripts/instance-user-data/job-service.tftpl")
+#   vars = {
+#     postgres_host     = "module.instance_rds.rds_ip"
+#     postgres_port     = module.instance_rds.rds_port
+#     postgres_db       = var.rds_db_name
+#     postgres_user     = var.rds_username
+#     postgres_password = var.rds_password
 
-    domain_url = "localhost"
-  }
+#     domain_url = "localhost"
+#   }
 
-  depends_on = [module.instance_rds]
-}
+#   depends_on = [module.instance_rds]
+# }
 
-data "template_file" "billing_script" {
-  template = file("./scripts/instance-user-data/billing-service.tftpl")
-  vars = {
-    postgres_host     = "module.instance_rds.rds_ip"
-    postgres_port     = module.instance_rds.rds_port
-    postgres_db       = var.rds_db_name
-    postgres_user     = var.rds_username
-    postgres_password = var.rds_password
+# data "template_file" "billing_script" {
+#   template = file("./scripts/instance-user-data/billing-service.tftpl")
+#   vars = {
+#     postgres_host     = "module.instance_rds.rds_ip"
+#     postgres_port     = module.instance_rds.rds_port
+#     postgres_db       = var.rds_db_name
+#     postgres_user     = var.rds_username
+#     postgres_password = var.rds_password
 
-    domain_url = "localhost"
-  }
+#     domain_url = "localhost"
+#   }
 
-  depends_on = [module.instance_rds]
-}
+#   depends_on = [module.instance_rds]
+# }
 
 data "template_cloudinit_config" "service_template_file" {
   depends_on    = [module.instance_rds]
@@ -94,10 +94,19 @@ data "template_cloudinit_config" "service_template_file" {
 
   part {
     content_type = "text/x-shellscript"
+    content = templatefile("./scripts/instance-user-data/postgres-db.tftpl", {
+      postgres_db  = var.rds_db_name
+      postgres_user = var.rds_username
+      postgres_password = var.rds_password
+    })
+  }
+
+  part {
+    content_type = "text/x-shellscript"
     content = templatefile("./scripts/instance-user-data/auth-service.tftpl", {
       algorithm      = "HS256"
       secret_key     = var.app_secret
-      mongo_host     = "127.0.0.1"
+      mongo_host     = "mongo_container"
       mongo_port     = 27017
       mongo_db_name  = var.mongo_db_name
       mongo_username = var.mongo_username
@@ -108,7 +117,7 @@ data "template_cloudinit_config" "service_template_file" {
   part {
     content_type = "text/x-shellscript"
     content = templatefile("./scripts/instance-user-data/product-service.tftpl", {
-      mongo_host     = "localhost"
+      mongo_host     = "mongo_container"
       mongo_port     = 27017
       mongo_db_name  = var.mongo_db_name
       mongo_username = var.mongo_username
@@ -121,7 +130,7 @@ data "template_cloudinit_config" "service_template_file" {
   part {
     content_type = "text/x-shellscript"
     content = templatefile("./scripts/instance-user-data/transportation-service.tftpl", {
-      mongo_host     = "localhost"
+      mongo_host     = "mongo_container"
       mongo_port     = 27017
       mongo_db_name  = var.mongo_db_name
       mongo_username = var.mongo_username
@@ -135,7 +144,7 @@ data "template_cloudinit_config" "service_template_file" {
   part {
     content_type = "text/x-shellscript"
     content = templatefile("./scripts/instance-user-data/organization-service.tftpl", {
-      mongo_host     = "localhost"
+      mongo_host     = "mongo_container"
       mongo_port     = 27017
       mongo_db_name  = var.mongo_db_name
       mongo_username = var.mongo_username
@@ -148,7 +157,7 @@ data "template_cloudinit_config" "service_template_file" {
   part {
     content_type = "text/x-shellscript"
     content = templatefile("./scripts/instance-user-data/route-service.tftpl", {
-      mongo_host     = "localhost"
+      mongo_host     = "mongo_container"
       mongo_port     = 27017
       mongo_db_name  = var.mongo_db_name
       mongo_username = var.mongo_username
@@ -162,7 +171,7 @@ data "template_cloudinit_config" "service_template_file" {
   part {
     content_type = "text/x-shellscript"
     content = templatefile("./scripts/instance-user-data/healthcheck-service.tftpl", {
-      mongo_host     = "localhost"
+      mongo_host     = "mongo_container"
       mongo_port     = 27017
       mongo_db_name  = var.mongo_db_name
       mongo_username = var.mongo_username
@@ -172,48 +181,48 @@ data "template_cloudinit_config" "service_template_file" {
     })
   }
 
-  # part {
-  #   content_type = "text/x-shellscript"
-  #   content = templatefile("./scripts/instance-user-data/job-service.tftpl", {
-  #     postgres_host     = module.instance_rds.rds_ip
-  #     postgres_port     = module.instance_rds.rds_port
-  #     postgres_db       = var.rds_db_name
-  #     postgres_user     = var.rds_username
-  #     postgres_password = var.rds_password
-
-  #     domain_url = "localhost"
-  #   })
-  # }
-
-  # part {
-  #   content_type = "text/x-shellscript"
-  #   content = templatefile("./scripts/instance-user-data/billing-service.tftpl", {
-  #     postgres_host     = module.instance_rds.rds_ip
-  #     postgres_port     = module.instance_rds.rds_port
-  #     postgres_db       = var.rds_db_name
-  #     postgres_user     = var.rds_username
-  #     postgres_password = var.rds_password
-
-  #     domain_url = "localhost"
-  #   })
-  # }
-
   part {
-    filename     = "init.cfg"
-    content_type = "text/cloud-config"
-    content      = data.template_file.job_script.rendered
-  }
+    content_type = "text/x-shellscript"
+    content = templatefile("./scripts/instance-user-data/job-service.tftpl", {
+      postgres_host     = "postgres_container"
+      postgres_port     = 5432
+      postgres_db       = var.rds_db_name
+      postgres_user     = var.rds_username
+      postgres_password = var.rds_password
 
-  part {
-    filename     = "init.cfg"
-    content_type = "text/cloud-config"
-    content      = data.template_file.billing_script.rendered
+      domain_url = "localhost"
+    })
   }
 
   part {
     content_type = "text/x-shellscript"
+    content = templatefile("./scripts/instance-user-data/billing-service.tftpl", {
+      postgres_host     = "postgres_container"
+      postgres_port     = module.instance_rds.rds_port
+      postgres_db       = var.rds_db_name
+      postgres_user     = var.rds_username
+      postgres_password = var.rds_password
+
+      domain_url = "localhost"
+    })
+  }
+
+  # part {
+  #   filename     = "init-job.cfg"
+  #   content_type = "text/cloud-config"
+  #   content      = data.template_file.job_script.rendered
+  # }
+
+  # part {
+  #   filename     = "init-billing.cfg"
+  #   content_type = "text/cloud-config"
+  #   content      = data.template_file.billing_script.rendered
+  # }
+
+  part {
+    content_type = "text/x-shellscript"
     content = templatefile("./scripts/instance-user-data/user-service.tftpl", {
-      mongo_host     = "localhost"
+      mongo_host     = "mongo_container"
       mongo_port     = 27017
       mongo_db_name  = var.mongo_db_name
       mongo_username = var.mongo_username
@@ -226,7 +235,7 @@ data "template_cloudinit_config" "service_template_file" {
   part {
     content_type = "text/x-shellscript"
     content = templatefile("./scripts/instance-user-data/mail-service.tftpl", {
-      mongo_host     = "localhost"
+      mongo_host     = "mongo_container"
       mongo_port     = 27017
       mongo_db_name  = var.mongo_db_name
       mongo_username = var.mongo_username
