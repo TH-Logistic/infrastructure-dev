@@ -8,7 +8,7 @@ docker run \
     --env MONGO_INITDB_DATABASE=${mongo_db_name} \
     --env MONGO_INITDB_ROOT_USERNAME=${mongo_username} \
     --env MONGO_INITDB_ROOT_PASSWORD=${mongo_password} \
-    --env DOMAIN_URL=${domain_url}
+    --env DOMAIN_URL=${domain_url} \
     -p 8084:8084 \
     --name healthcheck_container \
     -d \

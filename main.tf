@@ -43,8 +43,38 @@ module "instance_rds" {
   allocated_storage   = 10
 }
 
+data "template_file" "job_script" {
+  template = file("./scripts/instance-user-data/job-service.tftpl")
+  vars = {
+    postgres_host     = "module.instance_rds.rds_ip"
+    postgres_port     = module.instance_rds.rds_port
+    postgres_db       = var.rds_db_name
+    postgres_user     = var.rds_username
+    postgres_password = var.rds_password
+
+    domain_url = "localhost"
+  }
+
+  depends_on = [module.instance_rds]
+}
+
+data "template_file" "billing_script" {
+  template = file("./scripts/instance-user-data/billing-service.tftpl")
+  vars = {
+    postgres_host     = "module.instance_rds.rds_ip"
+    postgres_port     = module.instance_rds.rds_port
+    postgres_db       = var.rds_db_name
+    postgres_user     = var.rds_username
+    postgres_password = var.rds_password
+
+    domain_url = "localhost"
+  }
+
+  depends_on = [module.instance_rds]
+}
+
 data "template_cloudinit_config" "service_template_file" {
-  depends_on = [ module.instance_rds ]
+  depends_on    = [module.instance_rds]
   gzip          = true
   base64_encode = true
 
@@ -67,7 +97,7 @@ data "template_cloudinit_config" "service_template_file" {
     content = templatefile("./scripts/instance-user-data/auth-service.tftpl", {
       algorithm      = "HS256"
       secret_key     = var.app_secret
-      mongo_host     = "localhost"
+      mongo_host     = "127.0.0.1"
       mongo_port     = 27017
       mongo_db_name  = var.mongo_db_name
       mongo_username = var.mongo_username
@@ -142,30 +172,42 @@ data "template_cloudinit_config" "service_template_file" {
     })
   }
 
-  part {
-    content_type = "text/x-shellscript"
-    content = templatefile("./scripts/instance-user-data/job-service.tftpl", {
-      postgres_host     = module.instance_rds.rds_ip
-      postgres_port     = module.instance_rds.rds_port
-      postgres_db       = var.rds_db_name
-      postgres_user     = var.rds_username
-      postgres_password = var.rds_password
+  # part {
+  #   content_type = "text/x-shellscript"
+  #   content = templatefile("./scripts/instance-user-data/job-service.tftpl", {
+  #     postgres_host     = module.instance_rds.rds_ip
+  #     postgres_port     = module.instance_rds.rds_port
+  #     postgres_db       = var.rds_db_name
+  #     postgres_user     = var.rds_username
+  #     postgres_password = var.rds_password
 
-      domain_url = "localhost"
-    })
+  #     domain_url = "localhost"
+  #   })
+  # }
+
+  # part {
+  #   content_type = "text/x-shellscript"
+  #   content = templatefile("./scripts/instance-user-data/billing-service.tftpl", {
+  #     postgres_host     = module.instance_rds.rds_ip
+  #     postgres_port     = module.instance_rds.rds_port
+  #     postgres_db       = var.rds_db_name
+  #     postgres_user     = var.rds_username
+  #     postgres_password = var.rds_password
+
+  #     domain_url = "localhost"
+  #   })
+  # }
+
+  part {
+    filename     = "init.cfg"
+    content_type = "text/cloud-config"
+    content      = data.template_file.job_script.rendered
   }
 
   part {
-    content_type = "text/x-shellscript"
-    content = templatefile("./scripts/instance-user-data/billing-service.tftpl", {
-      postgres_host     = module.instance_rds.rds_ip
-      postgres_port     = module.instance_rds.rds_port
-      postgres_db       = var.rds_db_name
-      postgres_user     = var.rds_username
-      postgres_password = var.rds_password
-
-      domain_url = "localhost"
-    })
+    filename     = "init.cfg"
+    content_type = "text/cloud-config"
+    content      = data.template_file.billing_script.rendered
   }
 
   part {
@@ -216,14 +258,14 @@ data "template_cloudinit_config" "service_template_file" {
 module "instance_server" {
   source = "github.com/TH-Logistic/ec2"
 
-  key_pair_name       = module.instance_key_pair.key_pair_name
-  instance_name       = var.tenant_unique_id
-  internet_gateway_id = module.internet_gateway.internet_gateway_id
-  vpc_id              = module.vpc.vpc_id
-  instance_type       = "t3.xlarge"
-  subnet_cidr         = "10.0.0.0/24"
+  key_pair_name        = module.instance_key_pair.key_pair_name
+  instance_name        = var.tenant_unique_id
+  internet_gateway_id  = module.internet_gateway.internet_gateway_id
+  vpc_id               = module.vpc.vpc_id
+  instance_type        = "t3.xlarge"
+  subnet_cidr          = "10.0.0.0/24"
   use_user_data_base64 = true
-  user_data_base64 = data.template_cloudinit_config.service_template_file.rendered
+  user_data_base64     = data.template_cloudinit_config.service_template_file.rendered
 }
 
 # resource "aws_ec2_instance_state" "instance_server_state"{
