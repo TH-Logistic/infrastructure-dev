@@ -264,7 +264,7 @@ module "instance_server" {
   user_data_base64     = data.template_cloudinit_config.service_template_file.rendered
 }
 
-data "template_cloudinit_config" "fe_template_file" {
+data "template_cloudinit_config" "frontend_template_file" {
   part {
     content_type = "text/x-shellscript"
     content = templatefile("./scripts/instance-user-data/web-admin.tftpl", {
@@ -273,7 +273,7 @@ data "template_cloudinit_config" "fe_template_file" {
   }
 }
 
-module "instance_fe" {
+module "instance_frontend" {
   source = "github.com/TH-Logistic/ec2"
 
   key_pair_name        = module.instance_key_pair.key_pair_name
@@ -283,5 +283,5 @@ module "instance_fe" {
   instance_type        = "t3.xlarge"
   subnet_cidr          = "10.0.10.0/24"
   use_user_data_base64 = true
-  user_data_base64     = data.template_cloudinit_config.fe_template_file.rendered
+  user_data_base64     = data.template_cloudinit_config.frontend_template_file.rendered
 }
