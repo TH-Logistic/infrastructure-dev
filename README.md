@@ -1,5 +1,5 @@
 # Infrastructure
-> This infrastructure instantiate required components in order to operate the application
+> This infrastructure instantiate required components in order to operate the a tenant
 
 # How to provision?
 1. Fill in the .tfvars file with values in (.tfvars.example)[./.tfvars.example]
