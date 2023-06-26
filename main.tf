@@ -255,13 +255,12 @@ module "instance_server" {
   source = "github.com/TH-Logistic/ec2"
 
   key_pair_name        = module.instance_key_pair.key_pair_name
-  instance_name        = var.tenant_unique_id
   internet_gateway_id  = module.internet_gateway.internet_gateway_id
   vpc_id               = module.vpc.vpc_id
   instance_type        = "t3.xlarge"
   subnet_cidr          = "10.0.0.0/24"
   use_user_data_base64 = true
-  name                 = "${var.tenant_unique_id}-server"
+  instance_name        = "${var.tenant_unique_id}-server"
   user_data_base64     = data.template_cloudinit_config.service_template_file.rendered
 }
 
@@ -287,12 +286,11 @@ module "instance_frontend" {
   source = "github.com/TH-Logistic/ec2"
 
   key_pair_name        = module.instance_key_pair.key_pair_name
-  instance_name        = var.tenant_unique_id
   internet_gateway_id  = module.internet_gateway.internet_gateway_id
   vpc_id               = module.vpc.vpc_id
   instance_type        = "t3.xlarge"
   subnet_cidr          = "10.0.10.0/24"
   use_user_data_base64 = true
-  name                 = "${var.tenant_unique_id}-frontend"
+  instance_name        = "${var.tenant_unique_id}-frontend"
   user_data_base64     = data.template_cloudinit_config.frontend_template_file.rendered
 }
