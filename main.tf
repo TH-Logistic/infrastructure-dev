@@ -94,8 +94,8 @@ data "template_cloudinit_config" "service_template_file" {
   part {
     content_type = "text/x-shellscript"
     content = templatefile("./scripts/instance-user-data/postgres-db.tftpl", {
-      postgres_db  = var.rds_db_name
-      postgres_user = var.rds_username
+      postgres_db       = var.rds_db_name
+      postgres_user     = var.rds_username
       postgres_password = var.rds_password
     })
   }
@@ -261,14 +261,24 @@ module "instance_server" {
   instance_type        = "t3.xlarge"
   subnet_cidr          = "10.0.0.0/24"
   use_user_data_base64 = true
+  name                 = "${var.tenant_unique_id}-server"
   user_data_base64     = data.template_cloudinit_config.service_template_file.rendered
 }
 
 data "template_cloudinit_config" "frontend_template_file" {
+
+  gzip          = true
+  base64_encode = true
+
+  part {
+    content_type = "text/x-shellscript"
+    content      = file("./scripts/ec2-user-data-ubuntu.sh")
+  }
+
   part {
     content_type = "text/x-shellscript"
     content = templatefile("./scripts/instance-user-data/web-admin.tftpl", {
-      backend_url=module.instance_server.public_ip
+      backend_url = module.instance_server.public_ip
     })
   }
 }
@@ -283,5 +293,6 @@ module "instance_frontend" {
   instance_type        = "t3.xlarge"
   subnet_cidr          = "10.0.10.0/24"
   use_user_data_base64 = true
+  name                 = "${var.tenant_unique_id}-frontend"
   user_data_base64     = data.template_cloudinit_config.frontend_template_file.rendered
 }
