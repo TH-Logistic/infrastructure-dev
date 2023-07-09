@@ -74,7 +74,7 @@ services:
     - /billing
 
 - name: mail_service
-  url: http://${billing_host}:8088/api/v1/mail
+  url: http://${mail_host}:8088/api/v1/mail
   routes:
   - name: mail_service_route
     paths:
