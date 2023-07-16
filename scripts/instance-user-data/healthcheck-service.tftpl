@@ -11,6 +11,7 @@ docker run \
     --env DOMAIN_URL=${domain_url} \
     -p 8084:8084 \
     --network app_network \
+    --add-host=host.docker.internal:host-gateway \
     --name healthcheck_container \
     -d \
     $REGISTRY/healthcheck_service:latest

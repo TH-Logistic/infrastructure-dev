@@ -11,6 +11,7 @@ docker run \
     --env DOMAIN_URL=${domain_url} \
     -p 8082:8082 \
     --network app_network \
+    --add-host=host.docker.internal:host-gateway \
     --name organization_container \
     -d \
     $REGISTRY/organization_service:latest

@@ -8,6 +8,7 @@ docker run \
     --env MONGO_INITDB_ROOT_PASSWORD=${mongo_password} \
     --name mongo_container \
     --network app_network \
+    --add-host=host.docker.internal:host-gateway \
     -p27017:27017 \
     -d \
     mongo

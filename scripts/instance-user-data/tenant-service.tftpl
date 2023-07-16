@@ -15,5 +15,6 @@ docker run \
     -p 8002:8002 \
     --name tenant_container \
     --network app_network \
+    --add-host=host.docker.internal:host-gateway \
     -d \
     $REGISTRY/tenant_service:latest
