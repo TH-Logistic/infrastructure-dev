@@ -234,18 +234,18 @@ data "template_cloudinit_config" "service_template_file" {
   part {
     content_type = "text/x-shellscript"
     content = templatefile("./scripts/instance-user-data/gateway.tftpl", {
-      auth_host           = "host.docker.internal"
-      product_host        = "host.docker.internal"
-      transportation_host = "host.docker.internal"
-      garage_host         = "host.docker.internal"
-      organization_host   = "host.docker.internal"
-      route_host          = "host.docker.internal"
-      location_host       = "host.docker.internal"
-      healthcheck_host    = "host.docker.internal"
-      job_host            = "host.docker.internal"
-      billing_host        = "host.docker.internal"
-      user_host           = "host.docker.internal"
-      mail_host           = "host.docker.internal"
+      auth_host           = "auth_container"
+      product_host        = "product_container"
+      transportation_host = "transportation_container"
+      garage_host         = "transportation_container"
+      organization_host   = "organization_container"
+      route_host          = "route_container"
+      location_host       = "route_container"
+      healthcheck_host    = "healthcheck_container"
+      job_host            = "job_container"
+      billing_host        = "billing_container"
+      user_host           = "user_container"
+      mail_host           = "mail_container"
     })
   }
 }

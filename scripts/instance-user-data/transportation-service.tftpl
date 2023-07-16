@@ -11,7 +11,6 @@ docker run \
     --env GOOGLE_MAP_API_KEY=${google_map_api_key} \
     --env DOMAIN_URL=${domain_url} \
     --network app_network \
-    --add-host=host.docker.internal:host-gateway \
     -p 8081:8081 \
     --name transportation_container \
     -d \
