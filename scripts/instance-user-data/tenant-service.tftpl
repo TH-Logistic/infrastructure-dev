@@ -10,7 +10,10 @@ docker run \
     --env MONGO_INITDB_ROOT_PASSWORD=${mongo_password} \
     --env AUTH_HOST=${auth_host} \
     --env AUTH_PORT=${auth_port} \
+    --env ROOT_USER=${root_user} \
+    --env ROOT_PASSWORD=${root_password} \
     -p 8002:8002 \
     --name tenant_container \
+    --network app_network \
     -d \
     $REGISTRY/tenant_service:latest
