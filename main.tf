@@ -293,4 +293,5 @@ module "instance_frontend" {
   use_user_data_base64 = true
   instance_name        = "${var.tenant_unique_id}-frontend"
   user_data_base64     = data.template_cloudinit_config.frontend_template_file.rendered
+  depends_on = [ module.instance_server, data.template_cloudinit_config.frontend_template_file ]
 }
