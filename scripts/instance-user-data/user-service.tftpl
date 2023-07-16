@@ -9,6 +9,8 @@ docker run \
     --env MONGO_INITDB_ROOT_USERNAME=${mongo_username} \
     --env MONGO_INITDB_ROOT_PASSWORD=${mongo_password} \
     --env AUTH_URL=${auth_url} \
+    --env ROOT_USER=${root_user} \
+    --env ROOT_PASSWORD=${root_password} \
     --network app_network \
     --add-host=host.docker.internal:host-gateway \
     -p 8001:3000 \
