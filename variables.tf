@@ -58,3 +58,13 @@ variable "rds_password" {
   description = "Postgres password"
   type        = string
 }
+
+variable "root_user" {
+  description = "Root User"
+  type = string
+}
+
+variable "root_password" {
+  description = "Root Password"
+  type = string
+}
