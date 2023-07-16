@@ -122,7 +122,7 @@ data "template_cloudinit_config" "service_template_file" {
       mongo_username = var.mongo_username
       mongo_password = var.mongo_password
 
-      domain_url = "localhost"
+      domain_url = "kong_gateway_container"
     })
   }
 
@@ -135,7 +135,7 @@ data "template_cloudinit_config" "service_template_file" {
       mongo_username = var.mongo_username
       mongo_password = var.mongo_password
 
-      domain_url         = "localhost"
+      domain_url = "kong_gateway_container"
       google_map_api_key = "AIzaSyDEokOCthVrnmMPiI_fLEZKQtV1SjFvjxQ"
     })
   }
@@ -149,7 +149,7 @@ data "template_cloudinit_config" "service_template_file" {
       mongo_username = var.mongo_username
       mongo_password = var.mongo_password
 
-      domain_url = "localhost"
+      domain_url = "kong_gateway_container"
     })
   }
 
@@ -162,7 +162,7 @@ data "template_cloudinit_config" "service_template_file" {
       mongo_username = var.mongo_username
       mongo_password = var.mongo_password
 
-      domain_url         = "localhost"
+      domain_url = "kong_gateway_container"
       google_map_api_key = "AIzaSyDEokOCthVrnmMPiI_fLEZKQtV1SjFvjxQ"
     })
   }
@@ -176,7 +176,7 @@ data "template_cloudinit_config" "service_template_file" {
       mongo_username = var.mongo_username
       mongo_password = var.mongo_password
 
-      domain_url = "localhost"
+      domain_url = "kong_gateway_container"
     })
   }
 
@@ -189,7 +189,7 @@ data "template_cloudinit_config" "service_template_file" {
       postgres_user     = var.rds_username
       postgres_password = var.rds_password
 
-      domain_url = "localhost"
+      domain_url = "kong_gateway_container"
     })
   }
 
@@ -202,7 +202,7 @@ data "template_cloudinit_config" "service_template_file" {
       postgres_user     = var.rds_username
       postgres_password = var.rds_password
 
-      domain_url = "localhost"
+      domain_url = "kong_gateway_container"
     })
   }
 
@@ -214,8 +214,7 @@ data "template_cloudinit_config" "service_template_file" {
       mongo_db_name  = var.mongo_db_name
       mongo_username = var.mongo_username
       mongo_password = var.mongo_password
-      auth_host      = "localhost"
-      auth_port      = 8001
+      auth_url = "http://kong_gateway_container:9000/auth"
     })
   }
 
@@ -228,7 +227,7 @@ data "template_cloudinit_config" "service_template_file" {
       mongo_username = var.mongo_username
       mongo_password = var.mongo_password
 
-      domain_url = "localhost"
+      domain_url = "kong_gateway_container"
     })
   }
 
