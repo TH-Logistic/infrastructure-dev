@@ -11,6 +11,7 @@ docker run \
     --env AUTH_HOST=${auth_host} \
     --env AUTH_PORT=${auth_port} \
     --network app_network \
+    --add-host=host.docker.internal:host-gateway \
     -p 8001:3000 \
     --name user_container \
     -d \

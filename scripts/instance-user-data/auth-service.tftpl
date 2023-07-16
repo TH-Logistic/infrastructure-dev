@@ -11,6 +11,7 @@ docker run \
     --env ALGORITHM=${algorithm} \
     --env SECRET_KEY=${secret_key} \
     --network app_network \
+    --add-host=host.docker.internal:host-gateway \
     -p 8000:80 \
     --name auth_container \
     -d \
