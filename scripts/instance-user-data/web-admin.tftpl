@@ -3,7 +3,7 @@
 REGISTRY=registry.thinhlh.com
 
 docker run \
-    --env REACT_APP_BACKEND_URL=${backend_url} \
+    --env REACT_APP_BACKEND_URL=http://${backend_url} \
     -p 80:3000 \
     --name web_admin \
     -d \

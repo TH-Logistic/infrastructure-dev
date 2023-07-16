@@ -277,7 +277,7 @@ data "template_cloudinit_config" "frontend_template_file" {
   part {
     content_type = "text/x-shellscript"
     content = templatefile("./scripts/instance-user-data/web-admin.tftpl", {
-      backend_url = module.instance_server.public_ip
+      backend_url = "${module.instance_server.public_ip}:9000"
     })
   }
 }
